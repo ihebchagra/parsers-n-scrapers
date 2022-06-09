@@ -1,5 +1,8 @@
 # DPM scraper
 
+### dependencies
+- Beautiful Soup 4
+
 ### How to use this
 
 - visit [http://www.dpm.tn/dpm_pharm/medicament/listmedicspec.php](http://www.dpm.tn/dpm_pharm/medicament/listmedicspec.php)
