@@ -1,3 +1,3 @@
 # medicament-scrapers
 
-my scripts for scraping different websites for médicament data
+ Scripts that I use to scrape and parse data from all around the web. Mostly stuff having to do with francophone medicine.
