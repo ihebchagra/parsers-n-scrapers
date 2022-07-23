@@ -1,4 +1,4 @@
-# DPM scraper
+# statmed scraper
 
 ### How to use this
 

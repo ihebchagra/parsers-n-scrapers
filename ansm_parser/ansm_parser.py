@@ -14,6 +14,7 @@ from math import floor
 import json
 
 database = []
+autocomplete = []
 obj = {}
 interact_obj={}
 page=0
@@ -33,6 +34,7 @@ for page_layout in extract_pages('ansm.pdf'):
 							database.append(obj)
 					obj={}
 					obj['substance']=element.get_text().replace('\n','')
+					autocomplete.append(element.get_text().replace('\n',''))
 					obj['interactions']=[]
 					interact_obj={}
 					interact_obj['substance']=''
@@ -62,3 +64,8 @@ database.append(obj)
 print("writing to interactions.js")
 json_final = json.dumps(database, sort_keys=False, indent=None, ensure_ascii=False)
 open("interactions.js","w").write("data="+json_final)
+
+
+print("writing to autocomplete.js")
+json_final = json.dumps(autocomplete, sort_keys=False, indent=None, ensure_ascii=False)
+open("autocomplete.js","w").write("autocomplete_list="+json_final)

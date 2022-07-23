@@ -9,6 +9,7 @@ html_doc=open("dpm.html")
 print("loading dpm.html file")
 bigsoup=BeautifulSoup(html_doc, 'html.parser')
 html_doc.close()
+autocomplete = []
 
 directory="pages_downloaded"
 json_output=[]
@@ -33,6 +34,9 @@ for filename in os.listdir(directory):
 			amm=entry.find_all('td')[1].font.string
 		index=next(entry.b.strings).replace(" :","").replace(" ","")
 		valeur=entry.find_all('td')[1].font.string.replace("\n"," ")
+		if index in ['DCI','Spécialité']:
+			if valeur not in autocomplete:
+				autocomplete.append(valeur)
 		object.update({index : valeur})
 	bigparent=bigsoup.find(string=re.compile(amm)).parent.parent
 	if bigparent.find('a',href=re.compile("rcp.pdf")) is not None:
@@ -48,3 +52,7 @@ for filename in os.listdir(directory):
 print("writing to medicaments.js")
 json_final = json.dumps(json_output, sort_keys=False,ensure_ascii=False)
 open("medicaments.js","w").write("data="+json_final)
+
+print("writing to autocomplete.js")
+json_final = json.dumps(autocomplete, sort_keys=False,ensure_ascii=False)
+open("autocomplete.js","w").write("autocomplete_list="+json_final)
