@@ -31,15 +31,13 @@ for h in [['dpm.html','pages_downloaded'],['dpmsup.html','pages_downloaded_sup']
 				continue
 			if entry.find_all('td')[1].font.string is None:
 				continue
-			if next(entry.b.strings) == 'AMM :':
-				amm=entry.find_all('td')[1].font.string[1]
 			index=next(entry.b.strings).replace(" :","").replace(" ","")
 			valeur=entry.find_all('td')[1].font.string.replace("\n"," ")
 			if index in ['DCI','Spécialité']:
 				if valeur not in autocomplete:
 					autocomplete.append(valeur)
 			object.update({index : valeur})
-		bigparent=bigsoup.find(string=re.compile(amm)).parent.parent
+		bigparent=bigsoup.find(string=re.compile(object['AMM'])).parent.parent
 		if bigparent.find('a',href=re.compile("rcp.pdf")) is not None:
 			valeur=bigparent.find('a',href=re.compile("rcp.pdf"))['href'].replace('../..','http://www.dpm.tn')
 			index='rcp'
