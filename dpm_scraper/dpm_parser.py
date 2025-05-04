@@ -8,18 +8,24 @@ import json
 autocomplete = []
 json_output=[]
 
-#for h in [['dpm.html','pages_downloaded'],['dpmsup.html','pages_downloaded_sup']]:
-for h in [['dpm.html','pages_downloaded']]:
+# for h in [['dpm.html','pages_downloaded']]:
+i=0
+for h in [['dpm.html','pages_downloaded'],['dpm_sup.html','pages_downloaded_sup']]:
+	j=0
+	if h == ['dpm.html','pages_downloaded']:
+		is_sup = False;
+	else:
+		is_sup = True;
 	html_doc=open(h[0],encoding='utf-8')
 	print("loading " + h[0] + " file")
 	bigsoup=BeautifulSoup(html_doc, 'html.parser')
 	html_doc.close()
 	directory=h[1]
-	i=0
 	length=len(os.listdir(directory))
 	for filename in os.listdir(directory):
 		i=i+1
-		print("fetching médicament ",i,"/",length)
+		j+=1
+		print("fetching médicament ",j,"/",length)
 		f = os.path.join(directory, filename)
 		if not os.path.isfile(f):
 			continue
@@ -27,6 +33,7 @@ for h in [['dpm.html','pages_downloaded']]:
 		soup = BeautifulSoup(fiche, 'html.parser')
 		fiche.close()
 		object = {}
+		object.update({'id' : i})
 		for entry in soup.find_all("tr"):
 			if entry.find("b") is None:
 				continue
@@ -34,9 +41,9 @@ for h in [['dpm.html','pages_downloaded']]:
 				continue
 			index=next(entry.b.strings).replace(" :","").replace(" ","")
 			valeur=entry.find_all('td')[1].font.string.replace("\n"," ")
-			if index in ['DCI','Spécialité']:
-				if valeur not in autocomplete:
-					autocomplete.append(valeur)
+			# if index in ['DCI','Spécialité']:
+			# 	if valeur not in autocomplete:
+			# 		autocomplete.append(valeur)
 			object.update({index : valeur})
 		try:
 			bigparent=bigsoup.find(string=re.compile(object['AMM'])).parent.parent
@@ -50,12 +57,11 @@ for h in [['dpm.html','pages_downloaded']]:
 				object.update({index : valeur})
 		except:
 			print("no AMM")
+		object.update({'is_sup': is_sup})
 		json_output.append(object)
 
-print("writing to medicaments.js")
-json_final = json.dumps(json_output, sort_keys=False,ensure_ascii=False)
-open("medicaments.js","w",encoding='utf-8').write("data="+json_final)
+json_final = json.dumps(json_output, sort_keys=False,ensure_ascii=False, indent=0)
+open("dpm.json","w",encoding='utf-8').write(json_final)
 
-print("writing to autocomplete.js")
-json_final = json.dumps(autocomplete, sort_keys=False,ensure_ascii=False)
-open("autocomplete.js","w",encoding='utf-8').write("autocomplete_list="+json_final)
+# json_final = json.dumps(autocomplete, sort_keys=False,ensure_ascii=False, indent=0)
+# open("medicaments_autocomplete.json","w",encoding='utf-8').write(json_final)

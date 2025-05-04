@@ -35,3 +35,8 @@ interactions.js
 *dict.json
 *features.js
 *pathologies.json
+*.csv
+*.db
+*.log
+*.sqlite
+*.json
